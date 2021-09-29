@@ -9,6 +9,30 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+// Set up mongoose connection
+var mongoose = require('mongoose');
+const uri =
+  'mongodb+srv://kabir:bighen#26@mongodb@cluster0.bd9c3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+
+let connect = async () => {
+  try {
+    await mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('WEEEEEEE');
+  } catch (error) {
+    console.error.bind(console, 'MongoDB initial connection error:');
+  }
+};
+
+
+
+let db = mongoose.connection;
+
+db.on('error', (err) => {
+  console.error.bind(console, 'Mongodb Error on connection error: ' + err);
+});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -23,12 +47,12 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -37,5 +61,25 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+/* 
+
+mongoose.connect(uri, options, function(error) {
+  // Check error in initial connection. There is no 2nd param to the callback.
+});
+
+
+
+const { MongoClient } = require('mongodb');
+const uri = "mongodb+srv://<username>:<password>@cluster0.bd9c3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
+});
+
+
+*/
 
 module.exports = app;
