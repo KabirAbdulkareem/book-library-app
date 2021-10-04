@@ -12,7 +12,7 @@ var app = express();
 // Set up mongoose connection
 var mongoose = require('mongoose');
 const uri =
-  'mongodb+srv://kabir:bighen#26@mongodb@cluster0.bd9c3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+  'mongodb+srv://kabir:wTQiA4ir3iTAlEnd@cluster0.bd9c3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
 let connect = async () => {
   try {
@@ -26,12 +26,16 @@ let connect = async () => {
   }
 };
 
-
+connect()
 
 let db = mongoose.connection;
 
 db.on('error', (err) => {
   console.error.bind(console, 'Mongodb Error on connection error: ' + err);
+});
+
+db.once("open", function () {
+  console.log("Connected successfully");
 });
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
